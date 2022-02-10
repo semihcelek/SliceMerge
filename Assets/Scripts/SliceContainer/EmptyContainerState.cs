@@ -11,12 +11,15 @@ namespace SemihCelek.SliceMerge.SliceContainer
         {
         }
         
+
+        public override void Start()
+        {
+        }
+
         public override void HandleMount(SliceMovementController sliceMovementController)
         {
             sliceMovementController.transform.SetParent(SliceContainer.transform);
             SliceContainer.StartCoroutine(MoveToSliceContainerCoroutine(sliceMovementController));
-
-            SliceContainer.ChangeState(new FullContainerState(SliceContainer, NextContainer, PreviousContainer));
         }
 
 
@@ -33,15 +36,15 @@ namespace SemihCelek.SliceMerge.SliceContainer
                 sliceTransform.position = Vector3.MoveTowards(sliceTransform.position,
                     SliceContainer.transform.position, Time.deltaTime);
 
-                sliceTransform.localEulerAngles = Vector3.zero;
+                sliceTransform.rotation = Quaternion.Lerp(sliceTransform.rotation, SliceContainer.transform.rotation,
+                    elapsedTime / time);
 
                 elapsedTime += Time.deltaTime;
 
                 yield return null;
             }
 
-            // OnCheckMerge?.Invoke();
-            // OnGenerateSlice?.Invoke();
+            SliceContainer.ChangeState(new FullContainerState(SliceContainer, NextContainer, PreviousContainer));
         }
     }
 }

@@ -43,6 +43,7 @@ namespace SemihCelek.SliceMerge.Slice
             {
                 _cachedTransform.position =
                     Vector3.Lerp(startPosition, destinationPosition, (elapsedTime / time));
+                
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }

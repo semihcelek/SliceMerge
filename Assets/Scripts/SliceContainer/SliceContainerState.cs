@@ -16,7 +16,7 @@ namespace SemihCelek.SliceMerge.SliceContainer
             NextContainer = nextContainer;
             PreviousContainer = previousContainer;
         }
-
+        
         public virtual void Start()
         {
         }
