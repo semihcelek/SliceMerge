@@ -5,18 +5,13 @@ namespace SemihCelek.SliceMerge.SliceContainer
     public abstract class SliceContainerState
     {
         protected SliceContainer SliceContainer;
-        
-        protected SliceContainer NextContainer;
 
-        protected SliceContainer PreviousContainer;
 
-        protected SliceContainerState(SliceContainer sliceContainer, SliceContainer nextContainer, SliceContainer previousContainer)
+        protected SliceContainerState(SliceContainer sliceContainer)
         {
             SliceContainer = sliceContainer;
-            NextContainer = nextContainer;
-            PreviousContainer = previousContainer;
         }
-        
+
         public virtual void Start()
         {
         }

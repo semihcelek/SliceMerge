@@ -7,17 +7,16 @@ namespace SemihCelek.SliceMerge.SliceContainer
 {
     public class FullContainerState : SliceContainerState
     {
-        public FullContainerState(SliceContainer sliceContainer, SliceContainer nextContainer,
-            SliceContainer previousContainer) : base(sliceContainer, nextContainer, previousContainer)
+        public FullContainerState(SliceContainer sliceContainer) : base(sliceContainer)
         {
         }
-        
+
         public static event SliceGenerationAction OnGenerateSlice;
 
         public override void Start()
         {
-            OnGenerateSlice?.Invoke();
             CheckAvailableMerges();
+            OnGenerateSlice?.Invoke();
         }
 
         public override void HandleMount(SliceMovementController sliceMovementController)
@@ -27,40 +26,82 @@ namespace SemihCelek.SliceMerge.SliceContainer
 
         private void CheckAvailableMerges()
         {
-            var previousContainerState = PreviousContainer;
-            var nextContainerState = NextContainer;
+            var previousContainerState = SliceContainer._previousContainer;
+            var nextContainerState = SliceContainer._nextContainer;
+
+
+            var scoreValueOnCurrentSlide = SliceContainer.GetComponentInChildren<SliceScoreView>();
+            var scoreValueOnPreviousSlide = previousContainerState.GetComponentInChildren<SliceScoreView>();
+            var scoreValueOnNextSlide = nextContainerState.GetComponentInChildren<SliceScoreView>();
+
 
             if (previousContainerState.GetCurrentSliceContainerState().GetType() == typeof(FullContainerState) &&
                 nextContainerState.GetCurrentSliceContainerState().GetType() == typeof(FullContainerState))
             {
                 SliceContainer.StartCoroutine(DoubleMergeCoroutine(previousContainerState, nextContainerState));
                 Debug.Log("Double Merge");
-                
+
                 return;
             }
-            
+
             if (nextContainerState.GetCurrentSliceContainerState().GetType() == typeof(FullContainerState))
             {
+                var isScoreIsMatchingWithNextSlice =
+                    scoreValueOnNextSlide.SliceScore == scoreValueOnCurrentSlide.SliceScore ? true : false;
+
+                if (!isScoreIsMatchingWithNextSlice) return;
+
                 SliceContainer.StartCoroutine(MergeContainersCoroutine(nextContainerState));
                 Debug.Log("Merge Left");
-                
+
+                scoreValueOnCurrentSlide.UpdateScoreOnSliceObject(scoreValueOnCurrentSlide.SliceScore * 2, Color.blue);
+
                 return;
             }
-            
+
             if (previousContainerState.GetCurrentSliceContainerState().GetType() == typeof(FullContainerState))
             {
+                var isScoreIsMatchingWithPreviousSlice =
+                    scoreValueOnPreviousSlide.SliceScore == scoreValueOnCurrentSlide.SliceScore
+                        ? true
+                        : false;
+
+                if (!isScoreIsMatchingWithPreviousSlice) return;
+
+
                 SliceContainer.StartCoroutine(MergeContainersCoroutine(previousContainerState));
                 Debug.Log("Merge Right");
-                
+
+                scoreValueOnCurrentSlide.UpdateScoreOnSliceObject(scoreValueOnCurrentSlide.SliceScore * 2, Color.blue);
                 return;
             }
-
-
         }
 
-        private IEnumerator DoubleMergeCoroutine(SliceContainer previousContainerState, SliceContainer nextContainerState)
+        private bool MergeRecursively(SliceContainer previousContainer, SliceContainer nextContainer)
         {
-            
+            var scoreValueOnPreviousSlide = previousContainer.GetComponentInChildren<SliceScoreView>();
+            var scoreValueOnNextSlide = nextContainer.GetComponentInChildren<SliceScoreView>();
+
+            if (nextContainer.GetCurrentSliceContainerState().GetType() != typeof(FullContainerState)) return false;
+
+            var isScoreIsMatchingWithNextSlice =
+                scoreValueOnNextSlide.SliceScore == scoreValueOnPreviousSlide.SliceScore ? true : false;
+
+            if (!isScoreIsMatchingWithNextSlice) return false;
+
+            SliceContainer.StartCoroutine(MergeContainersCoroutine(nextContainer));
+            Debug.Log("Merge Left");
+
+            scoreValueOnNextSlide.UpdateScoreOnSliceObject(scoreValueOnPreviousSlide.SliceScore * 2, Color.blue);
+
+
+            return MergeRecursively(nextContainer, nextContainer._nextContainer);
+        }
+
+
+        private IEnumerator DoubleMergeCoroutine(SliceContainer previousContainerState,
+            SliceContainer nextContainerState)
+        {
             var time = 1f;
 
             var elapsedTime = 0f;
@@ -71,7 +112,8 @@ namespace SemihCelek.SliceMerge.SliceContainer
                 var currentContainerTransform = SliceContainer.transform;
 
                 previousContainersSliceTransform.position =
-                    Vector3.Lerp(previousContainersSliceTransform.position, currentContainerTransform.position, elapsedTime / time);
+                    Vector3.Lerp(previousContainersSliceTransform.position, currentContainerTransform.position,
+                        elapsedTime / time);
 
                 previousContainersSliceTransform.rotation = Quaternion.Lerp(previousContainersSliceTransform.rotation,
                     currentContainerTransform.rotation, elapsedTime / time);
@@ -80,13 +122,14 @@ namespace SemihCelek.SliceMerge.SliceContainer
 
                 yield return null;
             }
-            
+
             foreach (Transform child in previousContainerState.transform)
             {
                 SliceContainer.Destroy(child.gameObject);
             }
-            // previousContainerState.ChangeState(new EmptyContainerState(previousContainerState));
-            
+
+            previousContainerState.ChangeState(new EmptyContainerState(previousContainerState));
+
             yield return SliceContainer.StartCoroutine(MergeContainersCoroutine(nextContainerState));
         }
 
@@ -116,10 +159,9 @@ namespace SemihCelek.SliceMerge.SliceContainer
             {
                 SliceContainer.Destroy(child.gameObject);
             }
-            
+
             SliceContainer.transform.GetChild(0).SetParent(containerToMerge.transform);
-            SliceContainer.ChangeState(new EmptyContainerState(SliceContainer,NextContainer, PreviousContainer));
+            SliceContainer.ChangeState(new EmptyContainerState(SliceContainer));
         }
-        
     }
 }
