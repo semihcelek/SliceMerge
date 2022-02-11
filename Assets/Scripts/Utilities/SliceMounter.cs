@@ -28,6 +28,8 @@ namespace SemihCelek.SliceMerge.Utilities
             var isSlice = other.TryGetComponent(out SliceMovementController sliceMovementController);
 
             if(!isSlice) return;
+
+            if (sliceMovementController.ArrivedCondition == true) return;
             
             currentContainer.HandleMount(sliceMovementController);
             

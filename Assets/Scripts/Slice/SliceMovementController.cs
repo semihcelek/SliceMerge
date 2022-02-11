@@ -13,8 +13,11 @@ namespace SemihCelek.SliceMerge.Slice
         [SerializeField]
         private Transform _targetPosition;
 
+        public bool ArrivedCondition;
+
         private void Awake()
         {
+            ArrivedCondition = false;
             _cachedTransform = transform;
             InputHandler.OnClickFireButton += OnFireButton;
         }
@@ -47,6 +50,8 @@ namespace SemihCelek.SliceMerge.Slice
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
+
+            ArrivedCondition = true;
         }
     }
 }
