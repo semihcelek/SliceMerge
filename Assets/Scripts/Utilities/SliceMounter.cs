@@ -32,9 +32,6 @@ namespace SemihCelek.SliceMerge.Utilities
             if (sliceMovementController.ArrivedCondition == true) return;
             
             currentContainer.HandleMount(sliceMovementController);
-            
-            Debug.Log("mount");
-            
         }
     }
 }
