@@ -23,17 +23,30 @@ namespace SemihCelek.SliceMerge.Slice
             if (nextSliceContainer.GetCurrentSliceContainerState().GetType() == typeof(EmptyContainerState) &&
                 previousSliceContainer.GetCurrentSliceContainerState().GetType() == typeof(EmptyContainerState)) return;
 
-            if (nextSliceContainer.GetCurrentSliceContainerState().GetType() == typeof(FullContainerState))
+            if (CheckNextContainers(currentSliceContainer, nextSliceContainer, currentSliceScore))
             {
-                var nextSliceScore = nextSliceContainer.GetComponentInChildren<SliceScoreView>();
-
-                var isScoreIsMatchingWithNextSlice = nextSliceScore.SliceScore == currentSliceScore;
-
-                if (!isScoreIsMatchingWithNextSlice) return;
-                nextSliceScore.UpdateScoreOnSliceObject(currentSliceScore * 2, Color.blue);
-                _currentSliceContainer.StartCoroutine(MergeSliceCoroutine(currentSliceContainer, nextSliceContainer));
+                CheckPreviousContainers(currentSliceContainer, previousSliceContainer, currentSliceScore);
             }
+        }
 
+        private bool CheckNextContainers(SliceContainer.SliceContainer currentSliceContainer, SliceContainer.SliceContainer nextSliceContainer,
+            int currentSliceScore)
+        {
+            if (nextSliceContainer.GetCurrentSliceContainerState().GetType() != typeof(FullContainerState)) return true;
+            var nextSliceScore = nextSliceContainer.GetComponentInChildren<SliceScoreView>();
+
+            var isScoreIsMatchingWithNextSlice = nextSliceScore.SliceScore == currentSliceScore;
+
+            if (!isScoreIsMatchingWithNextSlice) return true;
+            nextSliceScore.UpdateScoreOnSliceObject(currentSliceScore * 2, Color.blue);
+            _currentSliceContainer.StartCoroutine(MergeSliceCoroutine(currentSliceContainer, nextSliceContainer));
+
+            return false;
+        }
+
+        private void CheckPreviousContainers(SliceContainer.SliceContainer currentSliceContainer, SliceContainer.SliceContainer previousSliceContainer,
+            int currentSliceScore)
+        {
             if (previousSliceContainer.GetCurrentSliceContainerState().GetType() == typeof(FullContainerState))
             {
                 var previousSliceScore = previousSliceContainer.GetComponentInChildren<SliceScoreView>();

@@ -16,7 +16,7 @@ namespace SemihCelek.SliceMerge.Slice
         private void Start()
         {
             _sliceScoreController = new SliceScoreController(0);
-            UpdateScoreOnSliceObject(4,Color.red);
+            UpdateScoreOnSliceObject(2,Color.red);
         }
 
         public void UpdateScoreOnSliceObject(int score, Color color)
@@ -24,7 +24,9 @@ namespace SemihCelek.SliceMerge.Slice
             _sliceScoreController.SliceScore = score;
             _scoreOnSliceObject.text = score.ToString();
             _sliceRenderer.material.color = color;
+            // Ui.Updater.OnUpdateEvent(score)
         }
+        // Color of the slice can be decided throughout switch statements
         
         public int SliceScore
         {

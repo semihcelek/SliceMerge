@@ -43,7 +43,6 @@ namespace SemihCelek.SliceMerge.SliceContainer
                 yield return null;
             }
             
-            // SliceContainer.Destroy(sliceMovementController.GetComponent<SliceMovementController>());
             SliceContainer.ChangeState(new FullContainerState(SliceContainer));
         }
     }
