@@ -35,7 +35,7 @@ namespace SemihCelek.SliceMerge.Slice
 
         private IEnumerator MoveSliceToCircleCoroutine()
         {
-            var time = 0.6f;
+            var time = 0.4f;
 
             var startPosition = _cachedTransform.position;
             var destinationPosition = _targetPosition.position;

@@ -19,12 +19,13 @@ namespace SemihCelek.SliceMerge.SliceContainer
         {
             sliceMovementController.transform.SetParent(SliceContainer.transform);
             SliceContainer.StartCoroutine(MoveToSliceContainerCoroutine(sliceMovementController));
+            
         }
 
 
         private IEnumerator MoveToSliceContainerCoroutine(SliceMovementController sliceMovementController)
         {
-            var time = 1f;
+            var time = 0.4f;
 
             var elapsedTime = 0f;
 

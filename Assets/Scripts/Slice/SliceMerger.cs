@@ -18,7 +18,7 @@ namespace SemihCelek.SliceMerge.Slice
             var previousSliceContainer = currentSliceContainer._previousContainer;
             var nextSliceContainer = currentSliceContainer._nextContainer;
 
-            var currentSliceScore = currentSliceContainer.GetComponentInChildren<SliceScoreView>().SliceScore;
+            var currentSliceScore = currentSliceContainer.GetComponentInChildren<SliceScoreController>().SliceScore;
 
             if (nextSliceContainer.GetCurrentSliceContainerState().GetType() == typeof(EmptyContainerState) &&
                 previousSliceContainer.GetCurrentSliceContainerState().GetType() == typeof(EmptyContainerState)) return;
@@ -33,7 +33,7 @@ namespace SemihCelek.SliceMerge.Slice
             int currentSliceScore)
         {
             if (nextSliceContainer.GetCurrentSliceContainerState().GetType() != typeof(FullContainerState)) return true;
-            var nextSliceScore = nextSliceContainer.GetComponentInChildren<SliceScoreView>();
+            var nextSliceScore = nextSliceContainer.GetComponentInChildren<SliceScoreController>();
 
             var isScoreIsMatchingWithNextSlice = nextSliceScore.SliceScore == currentSliceScore;
 
@@ -49,7 +49,7 @@ namespace SemihCelek.SliceMerge.Slice
         {
             if (previousSliceContainer.GetCurrentSliceContainerState().GetType() == typeof(FullContainerState))
             {
-                var previousSliceScore = previousSliceContainer.GetComponentInChildren<SliceScoreView>();
+                var previousSliceScore = previousSliceContainer.GetComponentInChildren<SliceScoreController>();
 
                 var isScoreIsMatchingWithPreviousSlice =
                     previousSliceScore.SliceScore == currentSliceScore;
@@ -63,8 +63,8 @@ namespace SemihCelek.SliceMerge.Slice
 
         public void CombineIncomingSlice(SliceMovementController incomingSlice)
         {
-            var sliceScoreOnCurrentContainer = _currentSliceContainer.GetComponentInChildren<SliceScoreView>();
-            var sliceScoreOnIncomingSlice = incomingSlice.GetComponent<SliceScoreView>();
+            var sliceScoreOnCurrentContainer = _currentSliceContainer.GetComponentInChildren<SliceScoreController>();
+            var sliceScoreOnIncomingSlice = incomingSlice.GetComponent<SliceScoreController>();
 
             if (sliceScoreOnCurrentContainer.SliceScore == sliceScoreOnIncomingSlice.SliceScore)
             {
@@ -83,7 +83,7 @@ namespace SemihCelek.SliceMerge.Slice
         private IEnumerator MergeSliceCoroutine(SliceContainer.SliceContainer currentSliceContainer,
             SliceContainer.SliceContainer targetSliceContainer)
         {
-            var time = 1f;
+            var time = 0.6f;
 
             var elapsedTime = 0f;
 
@@ -102,6 +102,8 @@ namespace SemihCelek.SliceMerge.Slice
 
                 yield return null;
             }
+            
+            // SliceContainer.SliceContainer.Destroy(currentSliceContainer.transform.GetChild(0));
 
             foreach (Transform child in currentSliceContainer.transform)
             {
@@ -115,7 +117,7 @@ namespace SemihCelek.SliceMerge.Slice
 
         private IEnumerator MoveToSliceContainerCoroutine(SliceMovementController sliceMovementController)
         {
-            var time = 1f;
+            var time = 0.4f;
 
             var elapsedTime = 0f;
 
