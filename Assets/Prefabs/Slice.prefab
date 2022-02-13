@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 5157936031308152519}
   - component: {fileID: 5157936031308152512}
   - component: {fileID: 2134260084696645745}
+  - component: {fileID: 7714564058840280071}
   - component: {fileID: 5001817497844093160}
   m_Layer: 0
   m_Name: Slice
@@ -222,6 +223,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scoreOnSliceObject: {fileID: 7650232476225977818}
   _sliceRenderer: {fileID: 6671052666470194963}
+--- !u!114 &7714564058840280071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5157936031308152518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 096e993b43fd4c009ba0c0db33963ce2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderer: {fileID: 6671052666470194963}
+  _trailRenderer: {fileID: 5001817497844093160}
+  _particleSystem: {fileID: 0}
 --- !u!96 &5001817497844093160
 TrailRenderer:
   serializedVersion: 2

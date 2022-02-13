@@ -110,3 +110,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nextContainer: {fileID: 0}
   _previousContainer: {fileID: 0}
+  _sliceContainerSettings: {fileID: 11400000, guid: a3e0a787eb324495da98316bb0c7f66e, type: 2}

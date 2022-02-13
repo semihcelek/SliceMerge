@@ -7,14 +7,42 @@ namespace SemihCelek.SliceMerge.SliceContainer
     public class SliceContainer : SliceContainerStateMachine
     {
         [SerializeField]
-        public SliceContainer _nextContainer;
+        private SliceContainer _nextContainer;
 
         [SerializeField]
-        public SliceContainer _previousContainer;
+        private SliceContainer _previousContainer;
+
+        [SerializeField]
+        private SliceContainerSettings _sliceContainerSettings;
+
+        private SliceScoreController _sliceScoreController;
+        private SliceViewController _sliceViewController;
+        
+        public SliceContainer NextContainer
+        {
+            get => _nextContainer;
+        }
+
+        public SliceContainer PreviousContainer
+        {
+            get => _previousContainer;
+        }
+
+        public SliceScoreController SliceScoreController
+        {
+            get => _sliceScoreController;
+            set => _sliceScoreController = value;
+        }
+
+        public SliceViewController SliceViewController
+        {
+            get => _sliceViewController;
+            set => _sliceViewController = value;
+        }
 
         private void Start()
         {
-            ChangeState(new EmptyContainerState(this));
+            ChangeState(new EmptyContainerState(this, _sliceContainerSettings));
         }
 
         private void OnTriggerEnter(Collider other)

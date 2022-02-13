@@ -21,11 +21,6 @@ namespace SemihCelek.SliceMerge.Slice
             _cachedTransform = transform;
             InputHandler.OnClickFireButton += OnFireButton;
         }
-
-        private void Start()
-        {
-        }
-
         private void OnFireButton()
         {
             StartCoroutine(MoveSliceToCircleCoroutine());

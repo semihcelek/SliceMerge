@@ -7,18 +7,31 @@ namespace SemihCelek.SliceMerge.Slice
     public class SliceMerger
     {
         private SliceContainer.SliceContainer _currentSliceContainer;
+        private SliceContainerSettings _sliceContainerSettings;
+        
+        private SliceScoreController _sliceScoreController;
+        private SliceViewController _sliceViewController;
+        private SliceEffects _sliceEffects;
 
-        public SliceMerger(SliceContainer.SliceContainer currentSliceContainer)
+        public SliceMerger(SliceContainer.SliceContainer currentSliceContainer,
+            SliceScoreController sliceScoreController, SliceViewController sliceViewController,
+            SliceContainerSettings sliceContainerSettings)
         {
             _currentSliceContainer = currentSliceContainer;
+            _sliceViewController = sliceViewController;
+            _sliceScoreController = sliceScoreController;
+            _sliceContainerSettings = sliceContainerSettings;
+
+            _sliceEffects = new SliceEffects(_sliceViewController);
+            _sliceEffects.RemoveTrailerEffect();
         }
 
         public void CheckAvailableMerges(SliceContainer.SliceContainer currentSliceContainer)
         {
-            var previousSliceContainer = currentSliceContainer._previousContainer;
-            var nextSliceContainer = currentSliceContainer._nextContainer;
+            var previousSliceContainer = currentSliceContainer.PreviousContainer;
+            var nextSliceContainer = currentSliceContainer.NextContainer;
 
-            var currentSliceScore = currentSliceContainer.GetComponentInChildren<SliceScoreController>().SliceScore;
+            var currentSliceScore = currentSliceContainer.SliceScoreController.SliceScore;
 
             if (nextSliceContainer.GetCurrentSliceContainerState().GetType() == typeof(EmptyContainerState) &&
                 previousSliceContainer.GetCurrentSliceContainerState().GetType() == typeof(EmptyContainerState)) return;
@@ -29,11 +42,12 @@ namespace SemihCelek.SliceMerge.Slice
             }
         }
 
-        private bool CheckNextContainers(SliceContainer.SliceContainer currentSliceContainer, SliceContainer.SliceContainer nextSliceContainer,
+        private bool CheckNextContainers(SliceContainer.SliceContainer currentSliceContainer,
+            SliceContainer.SliceContainer nextSliceContainer,
             int currentSliceScore)
         {
             if (nextSliceContainer.GetCurrentSliceContainerState().GetType() != typeof(FullContainerState)) return true;
-            var nextSliceScore = nextSliceContainer.GetComponentInChildren<SliceScoreController>();
+            var nextSliceScore = nextSliceContainer.SliceScoreController;
 
             var isScoreIsMatchingWithNextSlice = nextSliceScore.SliceScore == currentSliceScore;
 
@@ -44,12 +58,13 @@ namespace SemihCelek.SliceMerge.Slice
             return false;
         }
 
-        private void CheckPreviousContainers(SliceContainer.SliceContainer currentSliceContainer, SliceContainer.SliceContainer previousSliceContainer,
+        private void CheckPreviousContainers(SliceContainer.SliceContainer currentSliceContainer,
+            SliceContainer.SliceContainer previousSliceContainer,
             int currentSliceScore)
         {
             if (previousSliceContainer.GetCurrentSliceContainerState().GetType() == typeof(FullContainerState))
             {
-                var previousSliceScore = previousSliceContainer.GetComponentInChildren<SliceScoreController>();
+                var previousSliceScore = previousSliceContainer.SliceScoreController;
 
                 var isScoreIsMatchingWithPreviousSlice =
                     previousSliceScore.SliceScore == currentSliceScore;
@@ -63,8 +78,8 @@ namespace SemihCelek.SliceMerge.Slice
 
         public void CombineIncomingSlice(SliceMovementController incomingSlice)
         {
-            var sliceScoreOnCurrentContainer = _currentSliceContainer.GetComponentInChildren<SliceScoreController>();
-            var sliceScoreOnIncomingSlice = incomingSlice.GetComponent<SliceScoreController>();
+            var sliceScoreOnCurrentContainer = _currentSliceContainer.SliceScoreController;
+            var sliceScoreOnIncomingSlice = incomingSlice.gameObject.GetComponent<SliceScoreController>();
 
             if (sliceScoreOnCurrentContainer.SliceScore == sliceScoreOnIncomingSlice.SliceScore)
             {
@@ -83,13 +98,13 @@ namespace SemihCelek.SliceMerge.Slice
         private IEnumerator MergeSliceCoroutine(SliceContainer.SliceContainer currentSliceContainer,
             SliceContainer.SliceContainer targetSliceContainer)
         {
-            var time = 0.6f;
+            var time = _sliceContainerSettings.MoveSpeed;
 
             var elapsedTime = 0f;
 
             while (elapsedTime < time)
             {
-                var sliceTransform = currentSliceContainer.transform.GetChild(0).transform;
+                var sliceTransform = currentSliceContainer.SliceViewController.transform;
                 var targetContainerTransform = targetSliceContainer.transform;
 
                 sliceTransform.position =
@@ -102,22 +117,17 @@ namespace SemihCelek.SliceMerge.Slice
 
                 yield return null;
             }
-            
-            // SliceContainer.SliceContainer.Destroy(currentSliceContainer.transform.GetChild(0));
 
-            foreach (Transform child in currentSliceContainer.transform)
-            {
-                SliceContainer.SliceContainer.Destroy(child.gameObject);
-            }
+            SliceContainer.SliceContainer.Destroy(currentSliceContainer.SliceViewController.gameObject);
 
-            currentSliceContainer.ChangeState(new EmptyContainerState(currentSliceContainer));
+            currentSliceContainer.ChangeState(new EmptyContainerState(currentSliceContainer,_sliceContainerSettings));
 
             CheckAvailableMerges(targetSliceContainer);
         }
 
         private IEnumerator MoveToSliceContainerCoroutine(SliceMovementController sliceMovementController)
         {
-            var time = 0.4f;
+            var time = _sliceContainerSettings.MoveSpeed;
 
             var elapsedTime = 0f;
 

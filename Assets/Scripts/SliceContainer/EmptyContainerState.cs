@@ -6,26 +6,22 @@ namespace SemihCelek.SliceMerge.SliceContainer
 {
     public class EmptyContainerState : SliceContainerState
     {
-        public EmptyContainerState(SliceContainer sliceContainer) : base(sliceContainer)
+        private SliceContainerSettings _sliceContainerSettings;
+        
+        public EmptyContainerState(SliceContainer sliceContainer, SliceContainerSettings sliceContainerSettings) : base(sliceContainer)
         {
-        }
-
-
-        public override void Start()
-        {
+            _sliceContainerSettings = sliceContainerSettings;
         }
 
         public override void HandleMount(SliceMovementController sliceMovementController)
         {
             sliceMovementController.transform.SetParent(SliceContainer.transform);
             SliceContainer.StartCoroutine(MoveToSliceContainerCoroutine(sliceMovementController));
-            
         }
-
 
         private IEnumerator MoveToSliceContainerCoroutine(SliceMovementController sliceMovementController)
         {
-            var time = 0.4f;
+            var time = _sliceContainerSettings.MoveSpeed;
 
             var elapsedTime = 0f;
 
@@ -43,8 +39,8 @@ namespace SemihCelek.SliceMerge.SliceContainer
 
                 yield return null;
             }
-            
-            SliceContainer.ChangeState(new FullContainerState(SliceContainer));
+
+            SliceContainer.ChangeState(new FullContainerState(SliceContainer, sliceMovementController,_sliceContainerSettings));
         }
     }
 }
