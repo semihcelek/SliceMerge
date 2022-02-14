@@ -17,6 +17,7 @@ namespace SemihCelek.SliceMerge.SliceContainer
 
         private SliceScoreController _sliceScoreController;
         private SliceViewController _sliceViewController;
+        private SliceEffects _sliceEffects;
         
         public SliceContainer NextContainer
         {
@@ -38,6 +39,12 @@ namespace SemihCelek.SliceMerge.SliceContainer
         {
             get => _sliceViewController;
             set => _sliceViewController = value;
+        }
+
+        public SliceEffects SliceEffects
+        {
+            get => _sliceEffects;
+            set => _sliceEffects = value;
         }
 
         private void Start()

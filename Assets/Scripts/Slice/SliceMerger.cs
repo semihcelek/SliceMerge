@@ -8,21 +8,19 @@ namespace SemihCelek.SliceMerge.Slice
     {
         private SliceContainer.SliceContainer _currentSliceContainer;
         private SliceContainerSettings _sliceContainerSettings;
-        
+
         private SliceScoreController _sliceScoreController;
-        private SliceViewController _sliceViewController;
         private SliceEffects _sliceEffects;
 
         public SliceMerger(SliceContainer.SliceContainer currentSliceContainer,
-            SliceScoreController sliceScoreController, SliceViewController sliceViewController,
-            SliceContainerSettings sliceContainerSettings)
+            SliceScoreController sliceScoreController, SliceContainerSettings sliceContainerSettings,
+            SliceEffects sliceEffects)
         {
             _currentSliceContainer = currentSliceContainer;
-            _sliceViewController = sliceViewController;
             _sliceScoreController = sliceScoreController;
             _sliceContainerSettings = sliceContainerSettings;
 
-            _sliceEffects = new SliceEffects(_sliceViewController);
+            _sliceEffects = sliceEffects;
             _sliceEffects.RemoveTrailerEffect();
         }
 
@@ -52,8 +50,8 @@ namespace SemihCelek.SliceMerge.Slice
             var isScoreIsMatchingWithNextSlice = nextSliceScore.SliceScore == currentSliceScore;
 
             if (!isScoreIsMatchingWithNextSlice) return true;
-            nextSliceScore.UpdateScoreOnSliceObject(currentSliceScore * 2, Color.blue);
-            _currentSliceContainer.StartCoroutine(MergeSliceCoroutine(currentSliceContainer, nextSliceContainer));
+            _currentSliceContainer.StartCoroutine(MergeSliceCoroutine(currentSliceContainer, nextSliceContainer,
+                (currentSliceScore * 2)));
 
             return false;
         }
@@ -70,9 +68,8 @@ namespace SemihCelek.SliceMerge.Slice
                     previousSliceScore.SliceScore == currentSliceScore;
 
                 if (!isScoreIsMatchingWithPreviousSlice) return;
-                previousSliceScore.UpdateScoreOnSliceObject(currentSliceScore * 2, Color.blue);
                 _currentSliceContainer.StartCoroutine(
-                    MergeSliceCoroutine(currentSliceContainer, previousSliceContainer));
+                    MergeSliceCoroutine(currentSliceContainer, previousSliceContainer, (currentSliceScore * 2)));
             }
         }
 
@@ -83,11 +80,8 @@ namespace SemihCelek.SliceMerge.Slice
 
             if (sliceScoreOnCurrentContainer.SliceScore == sliceScoreOnIncomingSlice.SliceScore)
             {
-                incomingSlice.transform.SetParent(_currentSliceContainer.transform);
-
-                _currentSliceContainer.StartCoroutine(MoveToSliceContainerCoroutine(incomingSlice));
-                sliceScoreOnCurrentContainer.UpdateScoreOnSliceObject(sliceScoreOnCurrentContainer.SliceScore * 2,
-                    Color.cyan);
+                _currentSliceContainer.StartCoroutine(MoveToSliceContainerCoroutine(incomingSlice,
+                    (sliceScoreOnCurrentContainer.SliceScore * 2)));
             }
             else
             {
@@ -96,7 +90,7 @@ namespace SemihCelek.SliceMerge.Slice
         }
 
         private IEnumerator MergeSliceCoroutine(SliceContainer.SliceContainer currentSliceContainer,
-            SliceContainer.SliceContainer targetSliceContainer)
+            SliceContainer.SliceContainer targetSliceContainer, int currentSliceScore)
         {
             var time = _sliceContainerSettings.MoveSpeed;
 
@@ -118,14 +112,18 @@ namespace SemihCelek.SliceMerge.Slice
                 yield return null;
             }
 
+            UpdateScore(currentSliceScore, targetSliceContainer.SliceScoreController,
+                targetSliceContainer.SliceEffects);
+
             SliceContainer.SliceContainer.Destroy(currentSliceContainer.SliceViewController.gameObject);
 
-            currentSliceContainer.ChangeState(new EmptyContainerState(currentSliceContainer,_sliceContainerSettings));
+            currentSliceContainer.ChangeState(new EmptyContainerState(currentSliceContainer, _sliceContainerSettings));
 
             CheckAvailableMerges(targetSliceContainer);
         }
 
-        private IEnumerator MoveToSliceContainerCoroutine(SliceMovementController sliceMovementController)
+        private IEnumerator MoveToSliceContainerCoroutine(SliceMovementController sliceMovementController,
+            int sliceScore)
         {
             var time = _sliceContainerSettings.MoveSpeed;
 
@@ -149,7 +147,16 @@ namespace SemihCelek.SliceMerge.Slice
 
             SliceContainer.SliceContainer.Destroy(sliceMovementController.gameObject);
 
+            UpdateScore(sliceScore, _sliceScoreController, _sliceEffects);
+
             CheckAvailableMerges(_currentSliceContainer);
+        }
+
+        private void UpdateScore(int score, SliceScoreController scoreController, SliceEffects sliceEffects)
+        {
+            scoreController.UpdateScoreOnSliceObject(score);
+
+            sliceEffects.UpdateSliceColor(score);
         }
     }
 }

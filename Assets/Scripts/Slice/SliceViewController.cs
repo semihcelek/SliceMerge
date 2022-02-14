@@ -12,7 +12,6 @@ namespace SemihCelek.SliceMerge.Slice
 
         [SerializeField]
         private ParticleSystem _particleSystem;
-        // slice Effect Settings ScriptableObject
         
         public Renderer SliceRenderer
         {

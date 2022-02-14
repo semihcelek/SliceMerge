@@ -11,6 +11,7 @@ namespace SemihCelek.SliceMerge.Utilities
         public int Score { get; set; }
         
         public static event GameScoreActions OnUiScoreUpdate;
+        public static event SliceScoreActions OnUnlockSpawn;
         
         private void Awake()
         {
@@ -25,9 +26,7 @@ namespace SemihCelek.SliceMerge.Utilities
         private void HandleScoreUpdate(int score)
         {
             _score += score;
-            // Debug.Log(_score);
-            
-            // Update the score point on the screen
+
             // Validate players achievement on merging an modify the spawning behaviour accordingly.
             ValidatePlayersMergingAchievement(score);
             OnUiScoreUpdate?.Invoke(_score);
@@ -39,6 +38,9 @@ namespace SemihCelek.SliceMerge.Utilities
             {
                 case 16:
                     Debug.Log("Unlock 16");
+                    break;
+                case 32:
+                    Debug.Log("Unlock 32");
                     break;
                 case 64:
                     Debug.Log("Unlock 64");
