@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 namespace SemihCelek.SliceMerge.Utilities
@@ -6,7 +7,7 @@ namespace SemihCelek.SliceMerge.Utilities
     public class UiScoreUpdater : MonoBehaviour
     {
         [SerializeField]
-        private TextMesh _scoreText;
+        private TextMeshProUGUI _scoreText;
         
         private void Awake()
         {
@@ -21,7 +22,6 @@ namespace SemihCelek.SliceMerge.Utilities
         private void UpdateUi(int score)
         {
             _scoreText.text = score.ToString();
-            Debug.Log(score);
         }
     }
 }
