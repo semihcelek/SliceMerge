@@ -20,7 +20,7 @@ namespace SemihCelek.SliceMerge.SliceContainer
         {
         }
 
-        public virtual void HandleMount(SliceMovementController sliceMovementController)
+        public virtual void HandleMount(ISliceController sliceController)
         {
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using SemihCelek.SliceMerge.SliceContainer;
+using SemihCelek.SliceMerge.SliceContainer.States;
 using UnityEngine;
 
 namespace SemihCelek.SliceMerge.Utilities

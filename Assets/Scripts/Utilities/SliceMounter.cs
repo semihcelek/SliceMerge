@@ -25,13 +25,13 @@ namespace SemihCelek.SliceMerge.Utilities
                 currentContainer = sliceContainer;
             }
 
-            var isSlice = other.TryGetComponent(out SliceMovementController sliceMovementController);
+            var isSlice = other.TryGetComponent(out ISliceController sliceController);
 
             if(!isSlice) return;
 
-            if (sliceMovementController.ArrivedCondition == true) return;
+            // if (sliceMovementController.ArrivedCondition == true) return;
             
-            currentContainer.HandleMount(sliceMovementController);
+            currentContainer.HandleMount(sliceController);
         }
     }
 }

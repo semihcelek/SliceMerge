@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SemihCelek.SliceMerge.Slice;
+using SemihCelek.SliceMerge.Slice.SliceScoreController;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

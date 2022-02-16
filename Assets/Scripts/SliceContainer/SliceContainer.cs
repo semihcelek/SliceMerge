@@ -1,5 +1,6 @@
 using System;
 using SemihCelek.SliceMerge.Slice;
+using SemihCelek.SliceMerge.SliceContainer.States;
 using UnityEngine;
 
 namespace SemihCelek.SliceMerge.SliceContainer
@@ -12,12 +13,7 @@ namespace SemihCelek.SliceMerge.SliceContainer
         [SerializeField]
         private SliceContainer _previousContainer;
 
-        [SerializeField]
-        private SliceContainerSettings _sliceContainerSettings;
-
-        private SliceScoreController _sliceScoreController;
-        private SliceViewController _sliceViewController;
-        private SliceEffects _sliceEffects;
+        private SliceController _sliceInsideContainer;
         
         public SliceContainer NextContainer
         {
@@ -29,27 +25,15 @@ namespace SemihCelek.SliceMerge.SliceContainer
             get => _previousContainer;
         }
 
-        public SliceScoreController SliceScoreController
+        public SliceController SliceInsideContainer
         {
-            get => _sliceScoreController;
-            set => _sliceScoreController = value;
-        }
-
-        public SliceViewController SliceViewController
-        {
-            get => _sliceViewController;
-            set => _sliceViewController = value;
-        }
-
-        public SliceEffects SliceEffects
-        {
-            get => _sliceEffects;
-            set => _sliceEffects = value;
+            get => _sliceInsideContainer;
+            set => _sliceInsideContainer = value;
         }
 
         private void Start()
         {
-            ChangeState(new EmptyContainerState(this, _sliceContainerSettings));
+            ChangeState(new EmptyContainerState(this));
         }
 
         private void OnTriggerEnter(Collider other)
@@ -57,9 +41,9 @@ namespace SemihCelek.SliceMerge.SliceContainer
             SliceContainerState.HandleTrigger();
         }
 
-        public void HandleMount(SliceMovementController sliceMovementController)
+        public void HandleMount(ISliceController sliceController)
         {
-            SliceContainerState.HandleMount(sliceMovementController);
+            SliceContainerState.HandleMount(sliceController);
         }
     }
 }
