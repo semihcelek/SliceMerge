@@ -31,6 +31,8 @@ namespace SemihCelek.SliceMerge.Slice.SliceScoreController
 
         private void SetInitialScore()
         {
+            _sliceScore = 2;
+            
             if (OnGetRandomizedScore != null)
             {
                 _sliceScore = OnGetRandomizedScore.Invoke();

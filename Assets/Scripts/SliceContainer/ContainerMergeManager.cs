@@ -3,16 +3,16 @@ using SemihCelek.SliceMerge.SliceContainer.States;
 
 namespace SemihCelek.SliceMerge.SliceContainer
 {
-    public class SliceMergeManager
+    public class ContainerMergeManager
     {
         private SliceContainer _currentContainer;
         private SliceContainer _nextContainer;
         private SliceContainer _previousContainer;
 
-        private SliceController _sliceInsideContainer;
+        private ISliceController _sliceInsideContainer;
 
-        public SliceMergeManager(SliceContainer currentContainer, SliceContainer nextContainer,
-            SliceContainer previousContainer, SliceController sliceInsideContainer)
+        public ContainerMergeManager(SliceContainer currentContainer, SliceContainer nextContainer,
+            SliceContainer previousContainer, ISliceController sliceInsideContainer)
         {
             _currentContainer = currentContainer;
             _nextContainer = nextContainer;
@@ -35,8 +35,7 @@ namespace SemihCelek.SliceMerge.SliceContainer
         {
             if (_nextContainer.GetCurrentSliceContainerState().GetType() != typeof(FullContainerState)) return true;
 
-            _sliceInsideContainer.MergeToTargetSlice(_nextContainer.SliceInsideContainer);
-            _currentContainer.ChangeState(new EmptyContainerState(_currentContainer));
+            _sliceInsideContainer.MergeToTargetSlice(_nextContainer);
 
             return false;
         }
@@ -45,8 +44,7 @@ namespace SemihCelek.SliceMerge.SliceContainer
         {
             if (_previousContainer.GetCurrentSliceContainerState().GetType() != typeof(FullContainerState)) return;
 
-            _sliceInsideContainer.MergeToTargetSlice(_previousContainer.SliceInsideContainer);
-            _currentContainer.ChangeState(new EmptyContainerState(_currentContainer));
+            _sliceInsideContainer.MergeToTargetSlice(_previousContainer);
         }
     }
 }

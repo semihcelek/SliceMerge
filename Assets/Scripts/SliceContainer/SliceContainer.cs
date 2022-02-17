@@ -13,7 +13,7 @@ namespace SemihCelek.SliceMerge.SliceContainer
         [SerializeField]
         private SliceContainer _previousContainer;
 
-        private SliceController _sliceInsideContainer;
+        private ISliceController _sliceInsideContainer;
         
         public SliceContainer NextContainer
         {
@@ -25,12 +25,14 @@ namespace SemihCelek.SliceMerge.SliceContainer
             get => _previousContainer;
         }
 
-        public SliceController SliceInsideContainer
+        public ISliceController SliceInsideContainer
         {
             get => _sliceInsideContainer;
             set => _sliceInsideContainer = value;
         }
 
+        public Transform SliceContainerTransform { get; set; }
+        
         private void Start()
         {
             ChangeState(new EmptyContainerState(this));

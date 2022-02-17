@@ -1,7 +1,7 @@
-using System;
-using SemihCelek.SliceMerge.SliceContainer;
 using TMPro;
 using UnityEngine;
+using SemihCelek.SliceMerge.Slice.SliceEffects;
+using SemihCelek.SliceMerge.SliceContainer;
 
 namespace SemihCelek.SliceMerge.Slice
 {
@@ -15,7 +15,7 @@ namespace SemihCelek.SliceMerge.Slice
 
         [SerializeField]
         private ParticleSystem _particleSystem;
-        
+
         [SerializeField]
         private TextMeshPro _scoreOnSliceObject;
 
@@ -35,24 +35,43 @@ namespace SemihCelek.SliceMerge.Slice
         {
             _sliceEffects = new SliceEffects.SliceEffects(_trailRenderer, _renderer, _particleSystem);
             _sliceScoreController = new SliceScoreController.SliceScoreController(_scoreOnSliceObject, _sliceEffects);
-            
-            _sliceMovementController = new SliceMovementController.SliceMovementController(transform, _mountTargetPosition, this,_sliceSettings);
-            _sliceMergeController = new SliceMergeController.SliceMergeController(_sliceScoreController, _sliceMovementController, this);
+
+            _sliceMovementController =
+                new SliceMovementController.SliceMovementController(transform, _mountTargetPosition, this,
+                    _sliceSettings);
+            _sliceMergeController =
+                new SliceMergeController.SliceMergeController(_sliceScoreController, _sliceMovementController, this);
+
+            SliceHasEnteredContainer = false;
+            SliceScore = _sliceScoreController.SliceScore;
         }
 
-        public int SliceScore { get; set; }
-
-        public Transform SliceTransform { get; set; }
-
-        public void MergeToTargetSlice(ISliceController targetSlice)
+        public int SliceScore
         {
-           _sliceMergeController.ValidateAndMergeWithTargetSlice(targetSlice);
+            get => _sliceScoreController.SliceScore;
+            set => _sliceScoreController.SliceScore = value;
         }
 
-        public void MergeToSliceContainer(SliceContainer.SliceContainer sliceContainer)
+        public bool SliceHasEnteredContainer { get; set; }
+
+        public Transform SliceTransform
+        {
+            get => transform;
+        }
+
+        public GameObject SliceGameObject
+        {
+            get => gameObject;
+        }
+
+        public void MergeToTargetSlice(SliceContainer.SliceContainer targetSliceContainer)
+        {
+            _sliceMergeController.ValidateAndMergeWithTargetSlice(targetSliceContainer);
+        }
+
+        public void MoveSliceToContainer(SliceContainer.SliceContainer sliceContainer)
         {
             _sliceMergeController.MoveToSliceContainer(sliceContainer);
-
         }
     }
 }

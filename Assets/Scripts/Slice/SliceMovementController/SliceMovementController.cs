@@ -14,8 +14,6 @@ namespace SemihCelek.SliceMerge.Slice.SliceMovementController
         private SliceSettings _sliceSettings;
 
 
-        public bool ArrivedCondition;
-
         public SliceMovementController(Transform cachedTransform, Transform targetMountPosition,
             SliceController sliceController, SliceSettings sliceSettings)
         {
@@ -24,7 +22,6 @@ namespace SemihCelek.SliceMerge.Slice.SliceMovementController
             _sliceController = sliceController;
             _sliceSettings = sliceSettings;
 
-            ArrivedCondition = false;
             InputHandler.OnClickFireButton += OnFireButton;
         }
 
@@ -36,7 +33,7 @@ namespace SemihCelek.SliceMerge.Slice.SliceMovementController
 
         private IEnumerator MoveSliceToCircleCoroutine()
         {
-            var time = 0.4f;
+            var time = _sliceSettings.MoveSpeed;
 
             var startPosition = _cachedTransform.position;
             var destinationPosition = _targetMountPosition.position;
@@ -51,8 +48,6 @@ namespace SemihCelek.SliceMerge.Slice.SliceMovementController
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
-
-            ArrivedCondition = true;
         }
 
         public IEnumerator MergeWithTargetSliceCoroutine(ISliceController targetSlice)
@@ -77,11 +72,11 @@ namespace SemihCelek.SliceMerge.Slice.SliceMovementController
                 yield return null;
             }
         }
-        
+
         public IEnumerator MoveToSliceContainerCoroutine(SliceContainer.SliceContainer targetSliceContainer)
         {
             _cachedTransform.SetParent(targetSliceContainer.transform);
-            
+
             var time = _sliceSettings.MoveSpeed;
 
             var elapsedTime = 0f;
@@ -93,14 +88,14 @@ namespace SemihCelek.SliceMerge.Slice.SliceMovementController
                 sliceTransform.position = Vector3.Lerp(sliceTransform.position,
                     targetSliceContainer.transform.position, elapsedTime / time);
 
-                sliceTransform.rotation = Quaternion.Lerp(sliceTransform.rotation, targetSliceContainer.transform.rotation,
+                sliceTransform.rotation = Quaternion.Lerp(sliceTransform.rotation,
+                    targetSliceContainer.transform.rotation,
                     elapsedTime / time);
 
                 elapsedTime += Time.deltaTime;
 
                 yield return null;
             }
-
         }
     }
 }

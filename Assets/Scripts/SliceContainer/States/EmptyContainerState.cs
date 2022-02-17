@@ -11,7 +11,7 @@ namespace SemihCelek.SliceMerge.SliceContainer.States
 
         public override void HandleMount(ISliceController sliceController)
         {
-            sliceController.MergeToSliceContainer(SliceContainer); // after change to new state.
+            sliceController.MoveSliceToContainer(SliceContainer); // after change to new state.
         }
     }
 }

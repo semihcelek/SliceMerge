@@ -5,23 +5,23 @@ namespace SemihCelek.SliceMerge.SliceContainer.States
 {
     public class FullContainerState : SliceContainerState
     {
-        private SliceController _sliceController;
+        // private ISliceController _sliceController;
 
-        private SliceMergeManager _sliceMergeManager;
+        private ContainerMergeManager _containerMergeManager;
 
-        public FullContainerState(SliceContainer sliceContainer, SliceController sliceController) : base(sliceContainer)
+        public FullContainerState(SliceContainer sliceContainer, ISliceController sliceController) : base(sliceContainer)
         {
-            _sliceController = sliceController;
+            sliceContainer.SliceInsideContainer = sliceController;
         }
 
         public static event SliceGenerationAction OnGenerateSlice;
 
         public override void Start()
         {
-            _sliceMergeManager = new SliceMergeManager(SliceContainer, SliceContainer.NextContainer,
-                SliceContainer.PreviousContainer, _sliceController);
+            _containerMergeManager = new ContainerMergeManager(SliceContainer, SliceContainer.NextContainer,
+                SliceContainer.PreviousContainer, SliceContainer.SliceInsideContainer);
             
-            _sliceMergeManager.CheckAvailableMerges();
+            _containerMergeManager.CheckAvailableMerges();
 
             OnGenerateSlice?.Invoke();
         }

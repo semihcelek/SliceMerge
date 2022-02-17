@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5ae8c48e7a0459fab39a930c6ee3e69, type: 3}
-  m_Name: SliceContainerSettings
+  m_Name: SliceSettings
   m_EditorClassIdentifier: 
   MoveSpeed: 0.6

@@ -29,8 +29,8 @@ namespace SemihCelek.SliceMerge.Utilities
 
             if(!isSlice) return;
 
-            // if (sliceMovementController.ArrivedCondition == true) return;
-            
+            if (sliceController.SliceHasEnteredContainer) return;
+
             currentContainer.HandleMount(sliceController);
         }
     }

@@ -5,8 +5,10 @@ namespace SemihCelek.SliceMerge.Slice
     public interface ISliceController
     {
        int SliceScore { get; set; }
+       bool SliceHasEnteredContainer { get; set; }
        Transform SliceTransform { get; }
-       void MergeToTargetSlice(ISliceController targetSlice);
-       void MergeToSliceContainer(SliceContainer.SliceContainer sliceContainer);
+       GameObject SliceGameObject { get; }
+       void MergeToTargetSlice(SliceContainer.SliceContainer targetSliceContainer);
+       void MoveSliceToContainer(SliceContainer.SliceContainer sliceContainer);
     }
 }

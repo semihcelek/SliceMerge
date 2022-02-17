@@ -181,9 +181,7 @@ GameObject:
   - component: {fileID: 5539282210760107132}
   - component: {fileID: 8894785494163925977}
   - component: {fileID: 6671052666470194963}
-  - component: {fileID: 5157936031308152519}
   - component: {fileID: 5157936031308152512}
-  - component: {fileID: 2134260084696645745}
   - component: {fileID: 7714564058840280071}
   - component: {fileID: 5001817497844093160}
   m_Layer: 0
@@ -257,20 +255,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &5157936031308152519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5157936031308152518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 475142c8a3b104f8bb24b010cfa178cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _targetPosition: {fileID: 7983558228106943969, guid: 5fe5c471d341f407581592f5e624af1e, type: 3}
-  ArrivedCondition: 0
 --- !u!65 &5157936031308152512
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -284,20 +268,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.8734, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2134260084696645745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5157936031308152518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5e1b2011226425cb7b39c8ddf6a8b8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _scoreOnSliceObject: {fileID: 6405871214577893306}
-  _sliceViewController: {fileID: 7714564058840280071}
 --- !u!114 &7714564058840280071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,6 +283,9 @@ MonoBehaviour:
   _renderer: {fileID: 6671052666470194963}
   _trailRenderer: {fileID: 5001817497844093160}
   _particleSystem: {fileID: 0}
+  _scoreOnSliceObject: {fileID: 6405871214577893306}
+  _mountTargetPosition: {fileID: 7983558228106943969, guid: 5fe5c471d341f407581592f5e624af1e, type: 3}
+  _sliceSettings: {fileID: 11400000, guid: a3e0a787eb324495da98316bb0c7f66e, type: 2}
 --- !u!96 &5001817497844093160
 TrailRenderer:
   serializedVersion: 2
